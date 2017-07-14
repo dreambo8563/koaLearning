@@ -38,7 +38,7 @@ body.post('/', {
                 .default(55),
             // 有的话必须是true 或false
             man: Joi.boolean(),
-            // 有的话必须是整数
+            // 有的话必须是正数
             money: Joi
                 .number()
                 .positive(),
