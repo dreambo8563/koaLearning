@@ -1,6 +1,6 @@
-const router = require('koa-joi-router');
-const Joi = router.Joi;
-
+const router = require('koa-joi-router')
+const Joi = router.Joi
+var rp = require('request-promise')
 const qs = router()
 
 // http://localhost:4000/qs?name=xx&age=23 { "name": "xx", "age": 23 }
@@ -10,26 +10,32 @@ const qs = router()
 
 qs.prefix('/qs')
 
-qs.get('/', {
+qs.get(
+  '/',
+  {
     validate: {
-        // qs验证
-        query: {
-            // 必填且为string
-            name: Joi
-                .string()
-                .required(),
-            // 数组
-            list: Joi.array(),
-            // 必须是数字且最大88 如果没有默认18
-            age: Joi
-                .number()
-                .max(88)
-                .default(18)
-        }
+      // qs验证
+      query: {
+        // 必填且为string
+        name: Joi.string().required(),
+        // 数组
+        list: Joi.array(),
+        // 必须是数字且最大88 如果没有默认18
+        age: Joi.number().max(88).default(18)
+      }
     }
-}, ctx => {
-    const {request} = ctx
-    ctx.body = request.query
-})
+  },
+  async ctx => {
+    const { request } = ctx
+    try {
+      const res = await rp({
+        url: `http://jsonplaceholder.typicode.com/posts/${request.query.name}`
+      })
+      ctx.body = res
+    } catch (error) {
+      ctx.body = request.query
+    }
+  }
+)
 
 module.exports = qs

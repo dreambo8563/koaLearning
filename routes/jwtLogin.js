@@ -6,8 +6,13 @@ const bluebird = require('bluebird')
 const jwt = require('jsonwebtoken');
 const koajwt = require('koa-jwt');
 const config = require('../config/conf')
-
-const client = redis.createClient();
+try {
+    const client = redis.createClient(
+        {host:'redis'}
+    );
+} catch (error) {
+    console.log(error);
+}
 
 const jwtRoute = router()
 // 从cookies获取token app.use(koajwt({secret: 'A very secret key', cookie:
@@ -62,7 +67,6 @@ jwtRoute.post('/signup', {
         .hset(key, "username", body.username)
         .hset(key, "password", body.password)
         .execAsync()
-
     ctx.body = key
 })
 
@@ -111,8 +115,7 @@ jwtRoute.post('/login', {
 
     client
         .multi()
-        .set(id, token)
-        .expire(id, config.tokenExpire)
+        .setex(id, config.tokenExpire, token)
         .execAsync()
 
     // 把 token设置到header 或者 cookies也行

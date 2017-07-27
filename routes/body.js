@@ -80,7 +80,7 @@ body.post('/', {
         }
     }
 }, ctx => {
-    ctx.status = 200;
+    ctx.status = 202;
     const error = {
         error_code: 222,
         error_msg: "error"
