@@ -1,5 +1,7 @@
 ## koaLearning
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/dreambo8563/koaLearning.svg)](https://greenkeeper.io/)
+
 route 里放了常用的处理例子
 - qs
 - params
